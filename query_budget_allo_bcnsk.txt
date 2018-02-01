@@ -1,0 +1,54 @@
+
+		SELECT all_resource,SUM(total) as total
+		FROM (
+				SELECT all_resource,SUM(all_amount) as total
+				FROM bcnsk_ocmsdb.rs_maintaining
+				LEFT JOIN  bcnsk_pbmsdb.pbms_project
+					ON rs_maintaining.mt_pj_id = pbms_project.pj_origin
+				LEFT JOIN bcnsk_pbmsdb.pbms_base_budgetyear 
+					ON pbms_project.pj_bgy_id = pbms_base_budgetyear.bgy_id
+				LEFT JOIN bcnsk_pbmsdb.pbms_budget_allocate 
+					ON pbms_project.pj_id = pbms_budget_allocate.all_pj_id
+				WHERE  all_active = 'Y'
+                 AND all_is = 'P'
+                 AND mt_active ='Y'
+				 AND mt_pj_type = 'P'
+				 AND pj_active = 'Y'   AND pbms_base_budgetyear.bgy_title = '2560' GROUP BY all_resource  UNION 
+			SELECT all_resource,SUM(all_amount) as total
+			FROM (
+				SELECT *
+				FROM bcnsk_ocmsdb.rs_maintaining
+				LEFT JOIN  bcnsk_pbmsdb.pbms_activity
+					ON rs_maintaining.mt_ac_id = pbms_activity.ac_origin
+				LEFT JOIN  bcnsk_pbmsdb.pbms_project
+					ON rs_maintaining.mt_pj_id = pbms_project.pj_origin
+				LEFT JOIN bcnsk_pbmsdb.pbms_base_budgetyear 
+					ON pbms_project.pj_bgy_id = pbms_base_budgetyear.bgy_id
+				LEFT JOIN bcnsk_pbmsdb.pbms_budget_allocate 
+					ON pbms_project.pj_id = pbms_budget_allocate.all_pj_id
+				WHERE all_active = 'Y'
+                 AND all_is = 'P'
+                 AND mt_active ='Y'
+				 AND mt_pj_type = 'A'
+				 AND pj_active = 'Y'
+				 AND ac_active = 'Y'
+				 AND pj_pay_level = 'P'  AND pbms_base_budgetyear.bgy_title = '2560' GROUP BY pj_origin, all_resource
+		) AS tb_data02 GROUP BY all_resource UNION 
+				SELECT all_resource,SUM(all_amount) as total
+				FROM bcnsk_ocmsdb.rs_maintaining
+				LEFT JOIN  bcnsk_pbmsdb.pbms_activity
+					ON rs_maintaining.mt_ac_id = pbms_activity.ac_origin
+				LEFT JOIN  bcnsk_pbmsdb.pbms_project
+					ON rs_maintaining.mt_pj_id = pbms_project.pj_origin
+				LEFT JOIN bcnsk_pbmsdb.pbms_base_budgetyear 
+					ON pbms_project.pj_bgy_id = pbms_base_budgetyear.bgy_id
+				LEFT JOIN bcnsk_pbmsdb.pbms_budget_allocate 
+					ON pbms_activity.ac_id = pbms_budget_allocate.all_ac_id
+				WHERE all_active = 'Y'
+                 AND all_is = 'A'
+                 AND mt_active ='Y'
+				 AND mt_pj_type = 'A'
+				 AND pj_active = 'Y' 
+				 AND pj_pay_level = 'A' 
+				 AND ac_active = 'Y'  AND pbms_base_budgetyear.bgy_title = '2560' GROUP BY all_resource ) as tb_count
+		GROUP BY all_resource
