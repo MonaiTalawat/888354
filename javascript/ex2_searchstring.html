@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>การบ้านสัปดาห์ที่4 ex02</title>
+</head>
+<body>
+    <script type="text/javascript">
+        function search(){
+            var text = document.getElementById("textarea").value;
+            var arr_text = text.split(" ");
+            var sc = document.querySelector("input[name='radio']:checked").value;
+            var keyword = document.getElementById("keyword").value;
+            var count = 0;
+            arr_text.forEach(key => {
+                if (sc == "no") {
+                    keyword = keyword.toLowerCase();
+                    key = key.toLowerCase();
+                }
+                if (key.search(keyword) > -1) {
+                    count++;
+                }
+            });
+            
+            document.getElementById("output").innerHTML = count;
+        }
+    </script>
+    <center>
+        <h1>Ex2 - Search String Non Sensitive Case</h1>
+        <hr>
+        Text Input: 
+        <textarea id="textarea"></textarea>
+        <br><br>
+        Sensitive Case : 
+        <input type="radio" name="radio" value="yes" checked>Yes
+        <input type="radio" name="radio" value="no">No
+        <br><br>
+        Search : 
+        <input type="text" id="keyword">
+        <br><br>
+        <button onclick="search()">search</button>
+        <br><br>
+        Result for Search : <span id="output"></span>
+    </center>
+</body>
+</html>
