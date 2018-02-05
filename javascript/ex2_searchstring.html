@@ -11,11 +11,11 @@
         function search(){
             var text = document.getElementById("textarea").value;
             var arr_text = text.split(" ");
-            var sc = document.querySelector("input[name='radio']:checked").value;
+            var sensitiveStatus = document.querySelector("input[name='radio']:checked").value;
             var keyword = document.getElementById("keyword").value;
             var count = 0;
             arr_text.forEach(key => {
-                if (sc == "no") {
+                if (sensitiveStatus == "no") {
                     keyword = keyword.toLowerCase();
                     key = key.toLowerCase();
                 }
